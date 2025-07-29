@@ -58,11 +58,11 @@ async def main():
     font_large = pygame.font.SysFont(None, 160) # RESTARTなどの大きなテキスト用
     font_medium = pygame.font.SysFont(None, 80) # メッセージ用の少し小さめのテキスト用
     
-    start_txt = font_large.render("START", True, (0,0,0))  # スタート テキストの中身
-    next_txt = font_large.render("NEXT", True, (0,0,0))    # ネクスト テキストの中身
-    restart_txt = font_large.render("RESTART", True, (0,0,0)) # ENDからRESTARTに変更
+    # テキストの中身をレンダリング
+    start_txt = font_large.render("START", True, (0,0,0))
+    next_txt = font_large.render("NEXT", True, (0,0,0))
+    restart_txt = font_large.render("RESTART", True, (0,0,0))
     
-    # 新しいメッセージテキスト (日本語を削除し、英数字のみにする)
     # ALL CLEAR!! の文字色を黒に変更 (0,0,0)
     clear_message_line1 = font_medium.render("ALL CLEAR!!", True, (0,0,0)) 
     clear_message_line2 = font_medium.render("", True, (255,255,255)) # 空の文字列にする
@@ -119,10 +119,14 @@ async def main():
         # 各状態に応じた描画処理
         if game_state == GAME_STATE_START_SCREEN:
             screen.fill((0,0,0)) # START画面は毎回クリア
-            # START画面の描画
+            # STARTボタンの描画
             start_b = pygame.Rect(400, 360, 440, 110) # STARTボタンをアクティブな位置に定義
             pygame.draw.rect(screen,(255, 255, 255),start_b)
-            screen.blit(start_txt, (440, 365))
+            
+            # STARTテキストをボタンの中央に表示
+            start_text_width, start_text_height = start_txt.get_size()
+            screen.blit(start_txt, (start_b.x + (start_b.width - start_text_width) // 2, start_b.y + (start_b.height - start_text_height) // 2))
+            
             # 他のボタンやクリック領域は非アクティブ（当たり判定なし）にするため、Rectを(0,0,0,0)にリセット
             next_b1 = pygame.Rect(0,0,0,0)
             next_b2 = pygame.Rect(0,0,0,0)
@@ -148,11 +152,15 @@ async def main():
         elif game_state == GAME_STATE_STAGE1_CLEARED:
             # ステージ1クリア後の描画 (NEXTボタン表示)
             screen.blit(stage1_image, (0, 0)) # 背景を再描画
-            # 正解画像を再描画する行を削除しました。これにより、クリック後に画像が消えます。
+            screen.blit(stage1_a_image, (880, 50)) # 正解画像を再描画 (固定座標で指定)
             next_b1 = pygame.Rect(500, 500, 330, 110) # NEXTボタン1をアクティブな位置に定義
             pygame.draw.rect(screen,(255,255,255),next_b1)
             screen.blit(key_image, (550, 250))
-            screen.blit(next_txt, (510, 510))
+            
+            # NEXTテキストをボタンの中央に表示
+            next_text_width, next_text_height = next_txt.get_size()
+            screen.blit(next_txt, (next_b1.x + (next_b1.width - next_text_width) // 2, next_b1.y + (next_b1.height - next_text_height) // 2))
+            
             # s1_rectは非アクティブに
             s1_rect = pygame.Rect(0,0,0,0)
 
@@ -172,11 +180,15 @@ async def main():
         elif game_state == GAME_STATE_STAGE2_CLEARED:
             # ステージ2クリア後の描画 (NEXTボタン表示)
             screen.blit(stage2_image, (0, 0)) # 背景を再描画
-            # 正解画像を再描画する行を削除しました。これにより、クリック後に画像が消えます。
+            screen.blit(stage2_a_image, (336, 177)) # 正解画像を再描画 (固定座標で指定)
             next_b2 = pygame.Rect(500, 500, 330, 110) # NEXTボタン2をアクティブな位置に定義
             pygame.draw.rect(screen,(255,255,255),next_b2)
             screen.blit(key_image, (550, 250))
-            screen.blit(next_txt, (510, 510))
+            
+            # NEXTテキストをボタンの中央に表示
+            next_text_width, next_text_height = next_txt.get_size()
+            screen.blit(next_txt, (next_b2.x + (next_b2.width - next_text_width) // 2, next_b2.y + (next_b2.height - next_text_height) // 2))
+            
             # s2_rectは非アクティブに
             s2_rect = pygame.Rect(0,0,0,0)
 
